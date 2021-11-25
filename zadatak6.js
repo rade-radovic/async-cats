@@ -1,14 +1,26 @@
-// kontrolnu funckiju u prethodnom zadatku refaktorisati tako da joj mozemo proslediti bilo koje polje i vrednost datog objekta i da nije staticki vezana za samo jedno polje
+//dodati jos jednu kontrolnu funkciju koja ce proveravati da li dati objekat ima odredjeni key. Za potrebe datog zadatka potrebno je jednoj od macaka dodati jos jedan key : value na api-ju . 
+//Ukoliko ima odredjeni key (postaviti mogucnost prosledjivanja key-a, nije hardcodovan) izbacuje ga iz array-a . 
 
 const fetch = require("node-fetch")
 
-function uslov (polje, vrednost) {
-    if(polje === vrednost) {
+function hasKeyAndValue (key, value) {
+    if(key === value) {
         return true
     } else {
         return false
     }
 }
+
+function hasProperty(object, key) {
+    if(object.hasOwnProperty(key)) {
+        return true
+    } else {
+        return false
+    }
+}
+
+
+
 
 const getCats = async(userId) => {
     return fetch(`http://localhost:8080/users/${userId}`).then((response) => {
@@ -17,7 +29,7 @@ const getCats = async(userId) => {
         const cats = user.cats.map((catId) => {
             return fetch(`http://localhost:8080/cats/${catId}`).then((response) => {
                 return Promise.resolve(response.json()).then((macka) => {
-                    if(!uslov(macka.imageUrl, "http://images.somecdn.com/cat-33.jpg")){
+                    if(!hasKeyAndValue(macka.imageUrl, "http://images.somecdn.com/cat-33.jpg") && !hasProperty(macka, 'type')){
                         return macka 
                     }
                 })
